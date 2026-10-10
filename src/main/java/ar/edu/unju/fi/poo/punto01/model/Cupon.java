@@ -5,12 +5,14 @@ import java.util.Date;
 public class Cupon {
     private String codigo;
     private Date fechaVencimiento;
-    private Double porcentajeDescuento;
+    private double porcentajeDescuento;
 
     public Cupon() {
+        super();
     }
 
-    public Cupon(String codigo, Date fechaVencimiento, Double porcentajeDescuento) {
+    public Cupon(String codigo, Date fechaVencimiento, double porcentajeDescuento) {
+        super();
         this.codigo = codigo;
         this.fechaVencimiento = fechaVencimiento;
         this.porcentajeDescuento = porcentajeDescuento;
@@ -32,17 +34,14 @@ public class Cupon {
         this.fechaVencimiento = fechaVencimiento;
     }
 
-    public Double getPorcentajeDescuento() {
+    public double getPorcentajeDescuento() {
         return porcentajeDescuento;
     }
 
-    public void setPorcentajeDescuento(Double porcentajeDescuento) {
+    public void setPorcentajeDescuento(double porcentajeDescuento) {
         this.porcentajeDescuento = porcentajeDescuento;
     }
 
-    /**
-     * Valida si el cupón se encuentra vencido con respecto a una fecha dada.
-     */
     public boolean estaVencido(Date fechaComparacion) {
         if (fechaVencimiento == null || fechaComparacion == null) {
             return true;
