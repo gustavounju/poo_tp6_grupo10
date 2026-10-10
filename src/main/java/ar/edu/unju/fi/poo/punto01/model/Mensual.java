@@ -1,7 +1,5 @@
 package ar.edu.unju.fi.poo.punto01.model;
 
-import java.util.Date;
-
 public class Mensual extends RegistroIngresoSalida {
     private Cliente cliente;
 
@@ -9,15 +7,9 @@ public class Mensual extends RegistroIngresoSalida {
         super();
     }
 
-    public Mensual(Integer id, Date fecha, Date hora, Vehiculo vehiculo, Cliente cliente) {
-        super(id, fecha, hora, vehiculo);
+    public Mensual(Integer id, Vehiculo vehiculo, String estado, Cliente cliente) {
+        super(id, vehiculo, estado);
         this.cliente = cliente;
-    }
-
-    @Override
-    public Double obtenerImporte() {
-        // En los vehículos mensuales el importe a pagar al salir es siempre cero
-        return 0.0;
     }
 
     public Cliente getCliente() {
@@ -26,6 +18,11 @@ public class Mensual extends RegistroIngresoSalida {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    @Override
+    public Double obtenerImporte() {
+        return (double) 0;
     }
 
     @Override

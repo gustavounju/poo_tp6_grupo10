@@ -4,51 +4,16 @@ import java.util.Date;
 
 public class PorHora extends RegistroIngresoSalida {
     private Cupon cupon;
-    private double valorHora = 1000.0; // Valor por defecto especificado en el TP
+    private Double valorHora;
 
     public PorHora() {
         super();
     }
 
-    public PorHora(Integer id, Date fecha, Date hora, Vehiculo vehiculo, Cupon cupon) {
-        super(id, fecha, hora, vehiculo);
-        this.cupon = cupon;
-        this.valorHora = 1000.0;
-    }
-
-    public PorHora(Integer id, Date fecha, Date hora, Vehiculo vehiculo, Cupon cupon, double valorHora) {
-        super(id, fecha, hora, vehiculo);
+    public PorHora(Integer id, Vehiculo vehiculo, String estado, Cupon cupon, Double valorHora) {
+        super(id, vehiculo, estado);
         this.cupon = cupon;
         this.valorHora = valorHora;
-    }
-
-    @Override
-    public Double obtenerImporte() {
-        Date salida = getHoraSalida() != null ? getHoraSalida() : new Date();
-        long diferenciaMilisegundos = salida.getTime() - getHora().getTime();
-
-        if (diferenciaMilisegundos < 0) {
-            diferenciaMilisegundos = 0;
-        }
-
-        // Convertir milisegundos a horas
-        double horasExactas = diferenciaMilisegundos / (1000.0 * 60.0 * 60.0);
-
-        // Regla: mínimo 1 hora siempre y redondeo hacia arriba si fracciona
-        long horasACobrar = (long) Math.ceil(horasExactas);
-        if (horasACobrar < 1) {
-            horasACobrar = 1;
-        }
-
-        double total = horasACobrar * valorHora;
-
-        // Descuento por cupón solo si existe y NO está vencido al momento de la salida
-        if (cupon != null && !cupon.estaVencido(salida)) {
-            double descuento = total * (cupon.getPorcentajeDescuento() / 100.0);
-            total -= descuento;
-        }
-
-        return total;
     }
 
     public Cupon getCupon() {
@@ -59,16 +24,45 @@ public class PorHora extends RegistroIngresoSalida {
         this.cupon = cupon;
     }
 
-    public double getValorHora() {
+    public Double getValorHora() {
         return valorHora;
     }
 
-    public void setValorHora(double valorHora) {
+    public void setValorHora(Double valorHora) {
         this.valorHora = valorHora;
     }
 
     @Override
+    public Double obtenerImporte() {
+        Date salida = new Date();
+        long diferenciaMilisegundos = salida.getTime() - getHora().getTime();
+
+        if (diferenciaMilisegundos < 0) {
+            diferenciaMilisegundos = 0;
+        }
+
+        // Convertir milisegundos a horas
+        double horasExactas = diferenciaMilisegundos / (1000.0 * 60.0 * 60.0);
+
+        // Regla: no se fracciona por menos de una hora y mínimo 1 hora siempre
+        long horasACobrar = (long) Math.ceil(horasExactas);
+        if (horasACobrar < 1) {
+            horasACobrar = 1;
+        }
+
+        double total = horasACobrar * (valorHora != null ? valorHora : 1000.0);
+
+        // Si tiene cupón y no está vencido, se aplica el descuento
+        if (cupon != null && !cupon.estaVencido(salida)) {
+            double descuento = total * (cupon.getPorcentajeDescuento() / 100.0);
+            total -= descuento;
+        }
+
+        return total;
+    }
+
+    @Override
     public String toString() {
-        return "PorHora [" + super.toString() + ", valorHora=" + valorHora + ", cupon=" + cupon + "]";
+        return "PorHora [" + super.toString() + ", cupon=" + cupon + ", valorHora=" + valorHora + "]";
     }
 }
