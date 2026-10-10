@@ -1,6 +1,7 @@
 package ar.edu.unju.fi.poo.punto01.manager;
 
 import java.util.Calendar;
+
 import ar.edu.unju.fi.poo.punto01.model.Cliente;
 import ar.edu.unju.fi.poo.punto01.model.Cupon;
 import ar.edu.unju.fi.poo.punto01.model.Mensual;
@@ -11,60 +12,95 @@ import ar.edu.unju.fi.poo.punto01.model.Vehiculo;
 public class MainEstacionamiento {
 
     public static void main(String[] args) {
-        System.out.println("=== SISTEMA DE GESTION DE PLAYA DE ESTACIONAMIENTO ===\n");
-
-        Vehiculo vehiculo1 = new Vehiculo("AAA", "FORD", "BLANCO");
-        Vehiculo vehiculo2 = new Vehiculo("BBB", "FORD", "VERDE");
-        Vehiculo vehiculo3 = new Vehiculo("CCC", "TOYOTA", "NEGRO");
-
-        Cliente cliente1 = new Cliente(100, "100", "Carlos", "388463521");
-
-        // Cupón vigente con 10% de descuento (vence mañana)
-        Calendar calManana = Calendar.getInstance();
-        calManana.add(Calendar.DAY_OF_YEAR, 1);
-        Cupon cupon1 = new Cupon("CC11", calManana.getTime(), 10.0);
+        System.out.println("==========================================================");
+        System.out.println("   TRABAJO PRACTICO Nº 6 - PUNTO 1: PLAYA DE ESTACIONAMIENTO");
+        System.out.println("==========================================================\n");
 
         Manager manager = new Manager();
 
-        // 1. Caso de prueba: Vehículo mensual
-        System.out.println("--- Caso 1: Ingreso y Salida de Mensual ---");
-        RegistroIngresoSalida registro1 = new Mensual(100, vehiculo1, "INGRESADO", cliente1);
-        manager.registrarIngreso(registro1);
+        // Vehículos de prueba
+        Vehiculo v1 = new Vehiculo("AA111AA", "Toyota", "Gris");
+        Vehiculo v2 = new Vehiculo("BB222BB", "Ford", "Azul");
+        Vehiculo v3 = new Vehiculo("CC333CC", "Chevrolet", "Blanco");
+        Vehiculo v4 = new Vehiculo("DD444DD", "Volkswagen", "Rojo");
+        Vehiculo v5 = new Vehiculo("EE555EE", "Fiat", "Negro");
 
-        RegistroIngresoSalida registroBuscado1 = manager.obtenerRegistro(100);
-        Double importeMensual = manager.registrarSalida(registroBuscado1);
-        System.out.println("El importe es: " + importeMensual);
-        System.out.println("Estado final: " + registroBuscado1.getEstado() + "\n");
+        // Clientes
+        Cliente clienteMensual = new Cliente(1, "30123456", "Belgrano 123", "3888123456");
 
-        // 2. Caso de prueba: Vehículo por hora con cupón
-        System.out.println("--- Caso 2: Ingreso y Salida Por Hora con Cupon ---");
-        RegistroIngresoSalida registro2 = new PorHora(101, vehiculo2, "INGRESADO", cupon1, 1000.0);
-        manager.registrarIngreso(registro2);
+        // Cupones: uno vigente (mañana) y uno vencido (ayer)
+        Calendar calVigente = Calendar.getInstance();
+        calVigente.add(Calendar.DAY_OF_YEAR, 2);
+        Cupon cuponValido = new Cupon("DESC10", calVigente.getTime(), 10.0);
 
-        RegistroIngresoSalida registroBuscado2 = manager.obtenerRegistro(101);
-        Double importePorHora = manager.registrarSalida(registroBuscado2);
-        System.out.println("El importe es: " + importePorHora);
-        System.out.println("Estado final: " + registroBuscado2.getEstado() + "\n");
+        Calendar calVencido = Calendar.getInstance();
+        calVencido.add(Calendar.DAY_OF_YEAR, -2);
+        Cupon cuponVencido = new Cupon("DESC50", calVencido.getTime(), 50.0);
 
-        // 3. Caso de prueba: Intentar ingresar un vehículo ya ingresado
-        System.out.println("--- Caso 3: Validacion de Patente Duplicada ---");
-        RegistroIngresoSalida registro3 = new PorHora(102, vehiculo3, "INGRESADO", null, 1000.0);
-        manager.registrarIngreso(registro3);
-
-        // Se intenta ingresar nuevamente el mismo vehículo estando adentro
-        RegistroIngresoSalida registro3Repetido = new PorHora(103, vehiculo3, "INGRESADO", null, 1000.0);
-        manager.registrarIngreso(registro3Repetido);
+        // a. Registro de vehículo por hora sin cupón
+        System.out.println("--- Caso a: Ingreso por hora SIN cupón ---");
+        RegistroIngresoSalida regHoraSinCupon = new PorHora(101, v1, "INGRESADO", null, 1000.0);
+        manager.registrarIngreso(regHoraSinCupon);
         System.out.println();
 
-        // 4. Caso de prueba: Vehículo por hora intentando ingresar fuera de horario (22:00 hs)
-        System.out.println("--- Caso 4: Ingreso Por Hora despues de las 21:00 hs ---");
-        Calendar calTarde = Calendar.getInstance();
-        calTarde.set(Calendar.HOUR_OF_DAY, 22);
-        calTarde.set(Calendar.MINUTE, 15);
+        // b. Registro de vehículo por hora con cupón (no vencido y vencido)
+        System.out.println("--- Caso b1: Ingreso por hora CON cupón NO VENCIDO (10% desc.) ---");
+        RegistroIngresoSalida regHoraCuponValido = new PorHora(102, v2, "INGRESADO", cuponValido, 1000.0);
+        manager.registrarIngreso(regHoraCuponValido);
+        System.out.println();
 
-        Vehiculo vehiculo4 = new Vehiculo("DDD", "FIAT", "ROJO");
-        RegistroIngresoSalida registroTarde = new PorHora(104, vehiculo4, "INGRESADO", null, 1000.0);
-        registroTarde.setHora(calTarde.getTime());
-        manager.registrarIngreso(registroTarde);
+        System.out.println("--- Caso b2: Ingreso por hora CON cupón VENCIDO ---");
+        RegistroIngresoSalida regHoraCuponVencido = new PorHora(103, v3, "INGRESADO", cuponVencido, 1000.0);
+        manager.registrarIngreso(regHoraCuponVencido);
+        System.out.println();
+
+        // c. Registro de ingreso fuera de horario (luego de las 21:00 hs)
+        System.out.println("--- Caso c: Ingreso por hora FUERA DE HORARIO (21:30 hs) ---");
+        Calendar calFueraHora = Calendar.getInstance();
+        calFueraHora.set(Calendar.HOUR_OF_DAY, 21);
+        calFueraHora.set(Calendar.MINUTE, 30);
+
+        RegistroIngresoSalida regFueraHora = new PorHora(104, v4, "INGRESADO", null, 1000.0);
+        regFueraHora.setHora(calFueraHora.getTime());
+        manager.registrarIngreso(regFueraHora);
+        System.out.println();
+
+        // d. Registro de ingreso de vehículo de cliente mensual
+        System.out.println("--- Caso d: Ingreso de vehículo MENSUAL ---");
+        RegistroIngresoSalida regMensual = new Mensual(105, v5, "INGRESADO", clienteMensual);
+        manager.registrarIngreso(regMensual);
+        System.out.println();
+
+        // e. Buscar registro por ID y mostrar importe actual (sin dar de baja aún)
+        System.out.println("--- Caso e: Buscar por ID y mostrar importe actual ---");
+        RegistroIngresoSalida busqueda1 = manager.obtenerRegistro(102);
+        if (busqueda1 != null) {
+            System.out.println("Registro encontrado ID " + busqueda1.getId() 
+                    + " | Vehículo: " + busqueda1.getVehiculo().getPatente() 
+                    + " | Importe actual calculado: $" + busqueda1.obtenerImporte()
+                    + " | Estado: " + busqueda1.getEstado());
+        }
+        System.out.println();
+
+        // f. Buscar registro por ID y registrar salida de vehículo por hora
+        System.out.println("--- Caso f: Buscar por ID y registrar salida de vehículo POR HORA ---");
+        RegistroIngresoSalida busquedaSalidaHora = manager.obtenerRegistro(101);
+        if (busquedaSalidaHora != null) {
+            double totalCobrado = manager.registrarSalida(busquedaSalidaHora);
+            System.out.println("Salida efectuada para patente: " + busquedaSalidaHora.getVehiculo().getPatente());
+            System.out.println("Importe cobrado: $" + totalCobrado);
+            System.out.println("Nuevo estado: " + busquedaSalidaHora.getEstado());
+        }
+        System.out.println();
+
+        // g. Buscar registro por ID y registrar salida de vehículo mensual
+        System.out.println("--- Caso g: Buscar por ID y registrar salida de vehículo MENSUAL ---");
+        RegistroIngresoSalida busquedaSalidaMensual = manager.obtenerRegistro(105);
+        if (busquedaSalidaMensual != null) {
+            double totalCobradoMensual = manager.registrarSalida(busquedaSalidaMensual);
+            System.out.println("Salida efectuada para patente: " + busquedaSalidaMensual.getVehiculo().getPatente());
+            System.out.println("Importe cobrado: $" + totalCobradoMensual);
+            System.out.println("Nuevo estado: " + busquedaSalidaMensual.getEstado());
+        }
     }
 }
