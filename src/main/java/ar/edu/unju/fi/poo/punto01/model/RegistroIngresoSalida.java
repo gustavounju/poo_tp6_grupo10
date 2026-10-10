@@ -6,22 +6,31 @@ public abstract class RegistroIngresoSalida {
     private Integer id;
     private Date fecha;
     private Date hora;
-    private Date horaSalida; // Para calcular las horas reales de estadía al salir
     private Vehiculo vehiculo;
-    private String estado; // "INGRESADO" o "AFUERA"
+    private String estado;
 
     public RegistroIngresoSalida() {
+        super();
     }
 
-    public RegistroIngresoSalida(Integer id, Date fecha, Date hora, Vehiculo vehiculo) {
+    public RegistroIngresoSalida(Integer id, Vehiculo vehiculo, String estado) {
+        super();
+        this.id = id;
+        this.vehiculo = vehiculo;
+        this.estado = estado;
+        this.fecha = new Date();
+        this.hora = new Date();
+    }
+
+    public RegistroIngresoSalida(Integer id, Date fecha, Date hora, Vehiculo vehiculo, String estado) {
+        super();
         this.id = id;
         this.fecha = fecha;
         this.hora = hora;
         this.vehiculo = vehiculo;
-        this.estado = "INGRESADO";
+        this.estado = estado;
     }
 
-    // Método abstracto que cada tipo de registro implementa según su lógica
     public abstract Double obtenerImporte();
 
     public void cambiarEstado(String estado) {
@@ -52,14 +61,6 @@ public abstract class RegistroIngresoSalida {
         this.hora = hora;
     }
 
-    public Date getHoraSalida() {
-        return horaSalida;
-    }
-
-    public void setHoraSalida(Date horaSalida) {
-        this.horaSalida = horaSalida;
-    }
-
     public Vehiculo getVehiculo() {
         return vehiculo;
     }
@@ -79,6 +80,6 @@ public abstract class RegistroIngresoSalida {
     @Override
     public String toString() {
         return "RegistroIngresoSalida [id=" + id + ", fecha=" + fecha + ", hora=" + hora
-                + ", estado=" + estado + ", vehiculo=" + vehiculo + "]";
+                + ", vehiculo=" + vehiculo + ", estado=" + estado + "]";
     }
 }
