@@ -1,9 +1,6 @@
-package ar.edu.unju.fi.poo.punto01.main;
+package ar.edu.unju.fi.poo.punto01.manager;
 
 import java.util.Calendar;
-import java.util.Date;
-
-import ar.edu.unju.fi.poo.punto01.manager.Manager;
 import ar.edu.unju.fi.poo.punto01.model.Cliente;
 import ar.edu.unju.fi.poo.punto01.model.Cupon;
 import ar.edu.unju.fi.poo.punto01.model.Mensual;
